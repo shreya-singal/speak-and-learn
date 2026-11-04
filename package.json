@@ -1,0 +1,13 @@
+{
+  "name": "speak-and-learn",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20.6"
+  },
+  "scripts": {
+    "start": "node --env-file=.env server.js",
+    "test": "node --test",
+    "check": "node --check server.js && node --check api/generate.js"
+  }
+}

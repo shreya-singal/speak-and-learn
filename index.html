@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Speak &amp; Learn</title>
+<style>
+:root{--bg:#f7f5ef;--card:#fff;--ink:#1d2433;--mut:#5d6678;--line:#d9d6cb;--acc:#1b6b5a;--accb:#e3f2ee;--warn:#fff3cd;--warnt:#6b5200;--hl:#ffb703;--ph:#e8eefc;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14181f;--card:#1e242e;--ink:#eef1f6;--mut:#a3adbf;--line:#344055;--acc:#5fd1b5;--accb:#1d3a34;--warn:#3d3510;--warnt:#f5df8a;--hl:#ffb703;--ph:#26304a}}
+:root[data-theme="dark"]{--bg:#14181f;--card:#1e242e;--ink:#eef1f6;--mut:#a3adbf;--line:#344055;--acc:#5fd1b5;--accb:#1d3a34;--warn:#3d3510;--warnt:#f5df8a;--hl:#ffb703;--ph:#26304a}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,"Segoe UI","Noto Sans Devanagari",sans-serif}
+header{padding:16px 20px 0;max-width:1000px;margin:0 auto}
+h1{font-size:22px;margin:0}header p{margin:2px 0 0;color:var(--mut);font-size:14px}
+nav{display:flex;gap:6px;max-width:1000px;margin:12px auto 0;padding:0 20px;flex-wrap:wrap}
+nav button{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 14px;border-radius:999px;font:inherit;cursor:pointer}
+nav button[aria-selected=true]{background:var(--acc);color:var(--bg);border-color:var(--acc)}
+main{max-width:1000px;margin:0 auto;padding:16px 20px 40px}
+section{display:none}section.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:14px}
+textarea,input,select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px}
+textarea{width:100%;min-height:130px}
+.btn{background:var(--acc);color:var(--bg);border:0;border-radius:8px;padding:10px 16px;font:inherit;font-weight:600;cursor:pointer}
+.btn.sec{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn:disabled{opacity:.5}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.banner{background:var(--warn);color:var(--warnt);padding:8px 12px;border-radius:8px;font-weight:600;margin-bottom:12px}
+.note{color:var(--mut);font-size:13px}
+.edit{display:grid;grid-template-columns:54px 1fr 1fr 1fr auto;gap:8px;margin-bottom:8px;align-items:center}
+.edit input{width:100%;min-width:0}.edit .emo{text-align:center;font-size:20px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.tile{background:var(--card);border:3px solid var(--line);border-radius:14px;padding:12px 8px;text-align:center;cursor:pointer;font:inherit;color:var(--ink);min-height:130px}
+.tile .s{font-size:42px;line-height:1.1;display:block}
+.tile .e{font-weight:700;display:block;margin-top:4px}
+.tile .h{display:block;color:var(--mut);font-size:15px}
+.tile.ph{background:var(--ph)}
+.tile.scan{border-color:var(--hl);box-shadow:0 0 0 5px var(--hl);transform:scale(1.03)}
+.sent{min-height:64px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:20px}
+.chip{background:var(--accb);border-radius:8px;padding:4px 10px}
+.sep{font-size:12px;font-weight:700;color:var(--mut);margin:14px 0 6px;text-transform:uppercase;letter-spacing:.05em}
+#printArea .tile{cursor:default;border:2px dashed var(--mut);border-radius:0;min-height:150px}
+@media print{header,nav,.noprint,.banner{display:none!important}body{background:#fff;color:#000}section{display:none!important}#print{display:block!important}.tile{color:#000;border-color:#000!important;background:#fff!important;break-inside:avoid}.tile .h{color:#333}.grid{grid-template-columns:repeat(4,1fr)}.card{border:0;padding:0}}
+@media (max-width:700px){.edit{grid-template-columns:44px 1fr 1fr}.edit input[data-k=sym]{grid-column:2/4}.edit button{grid-column:1/-1}}
+</style>
+</head>
+<body>
+<header>
+<h1>Speak &amp; Learn</h1>
+<p>Generate a lesson board, review it, then export it to Cboard or use the local preview.</p>
+</header>
+<nav role="tablist">
+<button role="tab" data-t="teacher" aria-selected="true">1 · Teacher</button>
+<button role="tab" data-t="student" aria-selected="false">2 · Preview</button>
+<button role="tab" data-t="print" aria-selected="false">3 · Print</button>
+</nav>
+<main>
+
+<section id="teacher" class="on">
+<div class="card">
+<label for="lesson"><b>Paste a lesson</b></label>
+<textarea id="lesson" maxlength="6000" aria-describedby="lessonCount">Photosynthesis is the process by which green plants make their own food. The leaf takes in carbon dioxide from the air. The roots absorb water from the soil. Chlorophyll in the leaf captures energy from sunlight. Using this energy, the plant turns carbon dioxide and water into glucose, a sugar that feeds the plant. Oxygen is released into the air as a by-product.</textarea>
+<p class="note" id="lessonCount" aria-live="polite"></p>
+<div class="row" style="margin-top:10px">
+<button class="btn" id="gen">Generate board</button>
+<button class="btn sec" id="gold">Load sample board</button>
+<span class="note" id="status" role="status" aria-live="polite"></span>
+</div>
+</div>
+
+<div class="card" id="review" hidden>
+<div class="banner">Suggestions require teacher review and approval before use.</div>
+<div id="edits"></div>
+<div class="row" style="margin-top:8px">
+<button class="btn sec" id="add">+ Add tile</button>
+<button class="btn" id="approve">Approve &amp; open preview</button>
+<button class="btn sec" id="expEn" disabled>Download English for Cboard</button>
+<button class="btn sec" id="expHi" disabled>Download Hindi for Cboard</button>
+</div>
+<p class="note">Classroom phrases are added to every board. OBF exports include ARASAAC pictograms when a match is found; check every symbol and its license before use. <a href="https://app.cboard.io/" target="_blank" rel="noopener noreferrer">Open Cboard</a> and import the downloaded .obf file.</p>
+</div>
+</section>
+
+<section id="student">
+<div class="card">
+<div class="row noprint" style="justify-content:space-between">
+<div class="row">
+<label>Speak <select id="lang"><option value="en">English</option><option value="hi">Hindi</option><option value="both">Both</option></select></label>
+<button class="btn sec" id="scanBtn">Start scanning</button>
+<label class="note">Speed <input type="range" id="speed" min="600" max="2500" step="100" value="1300"></label>
+</div>
+<span class="note" id="voiceNote"></span>
+</div>
+<div class="row noprint" style="margin-top:8px">
+<button class="btn sec" id="expCurrent">Download selected language for Cboard</button>
+<span class="note" id="cboardStatus" role="status" aria-live="polite"></span>
+</div>
+<p class="note" id="scanHelp" hidden>Single-switch demo: press Space or Enter when the yellow highlight is on the tile you want.</p>
+</div>
+<div class="card">
+<div class="sent" id="sent" aria-live="polite"><span class="note">Tap tiles to build a sentence.</span></div>
+<div class="row" style="margin-top:8px"><button class="btn" id="speakSent">Speak sentence</button><button class="btn sec" id="back">Delete last</button><button class="btn sec" id="clr">Clear</button></div>
+</div>
+<div id="board"></div>
+</section>
+
+<section id="print">
+<div class="card noprint row"><button class="btn" id="doPrint">Print board</button><span class="note">If the print button is blocked in your browser, use the browser’s own Print command (Ctrl/Cmd+P) on this tab.</span></div>
+<div id="printArea"></div>
+</section>
+</main>
+
+<script>
+const PHRASES=[
+{en:"I have a question",hi:"मेरा एक सवाल है",sym:"question",s:"✋",ph:1},
+{en:"Can you repeat that?",hi:"क्या आप दोबारा बता सकते हैं?",sym:"repeat",s:"🔁",ph:1},
+{en:"I need a break",hi:"मुझे ब्रेक चाहिए",sym:"break",s:"⏸️",ph:1},
+{en:"I know the answer",hi:"मुझे जवाब पता है",sym:"answer",s:"💡",ph:1},
+{en:"I need help",hi:"मुझे मदद चाहिए",sym:"help",s:"🆘",ph:1}];
+const GOLD=[
+{en:"sunlight",hi:"धूप",sym:"sunlight",s:"☀️"},{en:"water",hi:"पानी",sym:"water",s:"💧"},{en:"carbon dioxide",hi:"कार्बन डाइऑक्साइड",sym:"carbon dioxide",s:"💨"},
+{en:"oxygen",hi:"ऑक्सीजन",sym:"oxygen",s:"🫁"},{en:"leaf",hi:"पत्ती",sym:"leaf",s:"🍃"},{en:"plant",hi:"पौधा",sym:"plant",s:"🌱"},
+{en:"glucose",hi:"ग्लूकोज़",sym:"sugar",s:"🍬"},{en:"roots",hi:"जड़ें",sym:"roots",s:"🪴"}];
+const KEYSYM={sun:"☀️",water:"💧",gas:"💨",air:"💨",oxygen:"🫁",leaf:"🍃",plant:"🌱",sugar:"🍬",root:"🪴",food:"🍽️"};
+let tiles=[],sentence=[],scanTimer=null,scanIdx=-1,voices=[],approved=false,approvedLesson="";
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const all=()=>[...tiles,...PHRASES];
+
+function show(t){if((t==="student"||t==="print")&&!approved){$("status").textContent="Review and approve the board before opening the preview or print view.";t="teacher"}
+document.querySelectorAll("section").forEach(s=>s.classList.toggle("on",s.id===t));
+document.querySelectorAll("nav button").forEach(b=>b.setAttribute("aria-selected",b.dataset.t===t));
+if(t!=="student")stopScan();if(t==="student")renderBoard();if(t==="print")renderPrint();}
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>show(b.dataset.t));
+
+function renderEdits(){
+$("review").hidden=false;
+$("edits").innerHTML=tiles.map((t,i)=>`<div class="edit"><input class="emo" data-i="${i}" data-k="s" value="${esc(t.s)}" aria-label="Emoji preview"><input data-i="${i}" data-k="en" value="${esc(t.en)}" aria-label="English label"><input data-i="${i}" data-k="hi" value="${esc(t.hi)}" aria-label="Hindi label"><input data-i="${i}" data-k="sym" value="${esc(t.sym||t.en)}" aria-label="English pictogram search keyword"><button class="btn sec" data-del="${i}">Delete</button></div>`).join("");
+$("edits").querySelectorAll("input").forEach(el=>el.oninput=()=>{const tile=tiles[+el.dataset.i];tile[el.dataset.k]=el.value;if(el.dataset.k==="sym")tile.s=symFor(el.value);approved=false;updateApprovalControls();$("status").textContent="Board changes need teacher approval before preview, print, or export."});
+$("edits").querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{tiles.splice(+b.dataset.del,1);sentence=sentence.filter(t=>PHRASES.includes(t)||tiles.includes(t));approved=false;renderEdits();renderSent();updateApprovalControls()});
+}
+$("add").onclick=()=>{tiles.push({en:"",hi:"",sym:"",s:"🔹"});approved=false;renderEdits();updateApprovalControls()};
+$("gold").onclick=()=>{tiles=GOLD.map(x=>({...x}));sentence=[];approved=false;$("status").textContent="Sample photosynthesis board loaded. Review it before approval.";renderEdits();updateApprovalControls()};
+$("approve").onclick=()=>{
+const incomplete=tiles.some(t=>!t.en.trim()||!t.hi.trim());
+if(!tiles.length||incomplete){$("status").textContent="Complete both English and Hindi labels for every tile before approving.";return}
+tiles=tiles.map(t=>({...t,en:t.en.trim(),hi:t.hi.trim(),sym:(t.sym||t.en).trim()}));
+approved=true;approvedLesson=$("lesson").value.trim();sentence=[];updateApprovalControls();$("status").textContent="Board approved. You can now download it for Cboard.";show("student")
+};
+function updateApprovalControls(){document.querySelectorAll("#expEn,#expHi,#expCurrent").forEach(button=>button.disabled=!approved);if(!approved)$("printArea").innerHTML=""}
+function reportExportStatus(message){$("cboardStatus").textContent=message;$("status").textContent=message}
+
+$("gen").onclick=async()=>{
+const lesson=$("lesson").value.trim();if(!lesson){$("status").textContent="Paste lesson text before generating a board.";return}
+$("gen").disabled=true;$("status").textContent="Generating…";
+try{
+const clean=await askAI(lesson);
+tiles=clean.map(x=>({en:x.en,hi:x.hi,sym:x.sym,s:symFor(x.sym)}));sentence=[];approved=false;approvedLesson="";
+$("status").textContent=`${clean.length} tiles suggested. Review every label and pictogram keyword.`;renderEdits();updateApprovalControls();show("teacher");
+}catch(error){
+$("status").textContent=`Generation failed: ${error.message} Your current board was kept; use “Load sample board” if needed.`;
+}finally{$("gen").disabled=false}};
+async function askAI(lesson){
+const r=await fetch("/api/generate",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({lesson})});
+const data=await r.json().catch(()=>({}));
+if(!r.ok)throw new Error(data.error||`Server error (${r.status}).`);
+if(!Array.isArray(data)||data.length<8||data.length>12)throw new Error("The server returned an invalid board.");
+return data}
+async function obf(lang){const key=lang==="hi"?"hi":"en",L=all().filter(t=>t.en.trim()&&t.hi.trim()),cols=4,rows=Math.ceil(L.length/cols);
+const matched=await Promise.all(L.map(async(t,i)=>{
+const button={id:"b"+i,label:t[key],vocalization:t[key]};
+try{
+const response=await fetch(`https://api.arasaac.org/api/pictograms/en/search/${encodeURIComponent(t.sym||t.en)}`);
+if(response.status===404)return{button,missing:true};
+if(!response.ok)return{button,failed:true};
+const matches=await response.json();
+const pictogram=Array.isArray(matches)?matches.find(item=>item&&item.aac===true&&Number.isInteger(item._id)):null;
+if(!pictogram)return{button,missing:true};
+const imageId=`arasaac-${pictogram._id}-${i}`;
+button.image_id=imageId;
+return{button,image:{id:imageId,url:`https://static.arasaac.org/pictograms/${pictogram._id}/${pictogram._id}_500.png`,content_type:"image/png",attribution:"ARASAAC; Sergio Palao",attribution_url:"https://arasaac.org/",license:"CC BY-NC-SA 4.0",license_url:"https://creativecommons.org/licenses/by-nc-sa/4.0/"},failed:false};
+}catch(error){return{button,failed:true}}
+}));
+const buttons=matched.map(item=>item.button),images=matched.filter(item=>item.image).map(item=>item.image);
+const failed=matched.filter(item=>item.failed).length;
+const missing=matched.filter(item=>item.missing).length;
+const order=[];for(let r=0;r<rows;r++){const row=buttons.slice(r*cols,r*cols+cols).map(b=>b.id);while(row.length<cols)row.push(null);order.push(row)}
+if(failed)reportExportStatus(`Pictogram lookup failed for ${failed} tile(s); those tiles will export as labels only.`);
+else if(missing)reportExportStatus(`Matched ${images.length} of ${L.length} pictograms; ${missing} tiles have no match and will export as labels only. Check each symbol in Cboard before use.`);
+else reportExportStatus(`Matched ${images.length} of ${L.length} pictograms. Check each symbol in Cboard before use.`);
+return JSON.stringify({format:"open-board-0.1",id:`speak-learn-${key}-${Date.now()}`,locale:key,name:`Speak & Learn (${key})`,buttons,grid:{rows,columns:cols,order},images,sounds:[]},null,1)}
+async function saveFile(name,lang){
+if(!approved){$("status").textContent="Approve the board before exporting it.";return}
+const buttons=document.querySelectorAll("#expEn,#expHi,#expCurrent");buttons.forEach(button=>button.disabled=true);
+try{
+const text=await obf(lang),blob=new Blob([text],{type:"application/vnd.openboardformat+json"});
+const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}catch(error){reportExportStatus(`Export failed: ${error.message}`)}
+finally{updateApprovalControls()}
+}
+function symFor(k){k=String(k).toLowerCase();for(const w in KEYSYM)if(k.includes(w))return KEYSYM[w];return "🔹"}
+
+function pickVoice(l){const p=l==="hi"?"hi":"en";return voices.find(v=>v.lang.toLowerCase().startsWith(p+"-in"))||voices.find(v=>v.lang.toLowerCase().startsWith(p))}
+function loadVoices(){voices=speechSynthesis.getVoices();const hv=pickVoice("hi");$("voiceNote").textContent=hv?"":"No Hindi voice on this device: Hindi text shows, speech may use English."}
+if("speechSynthesis"in window){loadVoices();speechSynthesis.onvoiceschanged=loadVoices}
+function say(text,l){if(!("speechSynthesis"in window))return;const u=new SpeechSynthesisUtterance(text);u.lang=l==="hi"?"hi-IN":"en-IN";const v=pickVoice(l);if(v)u.voice=v;u.rate=.9;speechSynthesis.speak(u)}
+function speakItem(t){if(!("speechSynthesis"in window))return;speechSynthesis.cancel();const m=$("lang").value;if(m!=="hi")say(t.en,"en");if(m!=="en")say(t.hi,"hi")}
+
+function tileHTML(t,i,extra=""){return `<button class="tile ${t.ph?"ph":""} ${extra}" data-i="${i}"><span class="s">${esc(t.s)}</span><span class="e">${esc(t.en)}</span><span class="h">${esc(t.hi)}</span></button>`}
+function renderBoard(){
+if(!tiles.length)tiles=GOLD.map(x=>({...x}));
+$("board").innerHTML=`<div class="sep">Lesson words</div><div class="grid">${tiles.map((t,i)=>tileHTML(t,i)).join("")}</div><div class="sep">Classroom phrases</div><div class="grid">${PHRASES.map((t,i)=>tileHTML(t,tiles.length+i)).join("")}</div>`;
+$("board").querySelectorAll(".tile").forEach(b=>b.onclick=()=>choose(+b.dataset.i));
+}
+function choose(i){const t=all()[i];if(!t)return;sentence.push(t);speakItem(t);renderSent()}
+function renderSent(){$("sent").innerHTML=sentence.length?sentence.map(t=>`<span class="chip">${esc(t.s)} ${esc($("lang").value==="hi"?t.hi:t.en)}</span>`).join(""):'<span class="note">Tap tiles to build a sentence.</span>'}
+$("lang").onchange=renderSent;
+$("speakSent").onclick=()=>{if(!sentence.length||!("speechSynthesis"in window))return;speechSynthesis.cancel();const m=$("lang").value;if(m!=="hi")say(sentence.map(t=>t.en).join(", "),"en");if(m!=="en")say(sentence.map(t=>t.hi).join(", "),"hi")};
+$("back").onclick=()=>{sentence.pop();renderSent()};
+$("clr").onclick=()=>{sentence=[];renderSent()};
+
+function scanStep(){const els=$("board").querySelectorAll(".tile");if(!els.length)return;els.forEach(e=>e.classList.remove("scan"));scanIdx=(scanIdx+1)%els.length;const e=els[scanIdx];e.classList.add("scan");e.scrollIntoView({block:"nearest"})}
+function startScan(){stopScan();$("scanBtn").textContent="Stop scanning";$("scanHelp").hidden=false;scanIdx=-1;scanStep();scanTimer=setInterval(scanStep,+$("speed").value)}
+function stopScan(){clearInterval(scanTimer);scanTimer=null;$("scanBtn").textContent="Start scanning";$("scanHelp").hidden=true;document.querySelectorAll(".tile.scan").forEach(e=>e.classList.remove("scan"))}
+$("scanBtn").onclick=()=>scanTimer?stopScan():startScan();
+$("speed").onchange=()=>{if(scanTimer)startScan()};
+document.addEventListener("keydown",e=>{if(scanTimer&&(e.code==="Space"||e.key==="Enter")&&!e.target.matches("input,textarea,select")){e.preventDefault();choose(scanIdx);clearInterval(scanTimer);scanTimer=setInterval(scanStep,+$("speed").value)}});
+
+function renderPrint(){if(!tiles.length)tiles=GOLD.map(x=>({...x}));$("printArea").innerHTML=`<div class="grid">${all().map((t,i)=>tileHTML(t,i)).join("")}</div>`}
+$("doPrint").onclick=()=>{if(!approved){$("status").textContent="Approve the board before printing it.";show("teacher");return}window.print()};
+$("expEn").onclick=()=>saveFile("speak-learn-en.obf","en");
+$("expHi").onclick=()=>saveFile("speak-learn-hi.obf","hi");
+$("expCurrent").onclick=()=>{const language=$("lang").value;if(language==="both"){$("cboardStatus").textContent="Choose English or Hindi before exporting to Cboard.";return}saveFile(`speak-learn-${language}.obf`,language)};
+$("lesson").oninput=()=>{
+$("lessonCount").textContent=`${$("lesson").value.length} / 6000 characters`;
+if(approved&&$("lesson").value.trim()!==approvedLesson){approved=false;updateApprovalControls();$("status").textContent="Lesson text changed. Review and approve the board again before preview, print, or export."}
+};
+$("lessonCount").textContent=`${$("lesson").value.length} / 6000 characters`;
+if(!("speechSynthesis"in window))$("voiceNote").textContent="Speech synthesis is not available in this browser.";
+$("gold").click();
+</script>
+</body>
+</html>
