@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Speak &amp; Learn</title>
+<style>
+:root{--bg:#f7f5ef;--card:#fff;--ink:#1d2433;--mut:#5d6678;--line:#d9d6cb;--acc:#1b6b5a;--accb:#e3f2ee;--warn:#fff3cd;--warnt:#6b5200;--hl:#ffb703;--ph:#e8eefc;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14181f;--card:#1e242e;--ink:#eef1f6;--mut:#a3adbf;--line:#344055;--acc:#5fd1b5;--accb:#1d3a34;--warn:#3d3510;--warnt:#f5df8a;--hl:#ffb703;--ph:#26304a}}
+:root[data-theme="dark"]{--bg:#14181f;--card:#1e242e;--ink:#eef1f6;--mut:#a3adbf;--line:#344055;--acc:#5fd1b5;--accb:#1d3a34;--warn:#3d3510;--warnt:#f5df8a;--hl:#ffb703;--ph:#26304a}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,"Segoe UI","Noto Sans Devanagari",sans-serif}
+header{padding:16px 20px 0;max-width:1000px;margin:0 auto}
+h1{font-size:22px;margin:0}header p{margin:2px 0 0;color:var(--mut);font-size:14px}
+nav{display:flex;gap:6px;max-width:1000px;margin:12px auto 0;padding:0 20px;flex-wrap:wrap}
+nav button{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 14px;border-radius:999px;font:inherit;cursor:pointer}
+nav button[aria-selected=true]{background:var(--acc);color:var(--bg);border-color:var(--acc)}
+main{max-width:1000px;margin:0 auto;padding:16px 20px 40px}
+section{display:none}section.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:14px}
+textarea,input,select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px}
+textarea{width:100%;min-height:130px}
+.btn{background:var(--acc);color:var(--bg);border:0;border-radius:8px;padding:10px 16px;font:inherit;font-weight:600;cursor:pointer}
+.btn.sec{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn:disabled{opacity:.5}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.banner{background:var(--warn);color:var(--warnt);padding:8px 12px;border-radius:8px;font-weight:600;margin-bottom:12px}
+.note{color:var(--mut);font-size:13px}
+.edit{display:grid;grid-template-columns:54px 1fr 1fr auto;gap:8px;margin-bottom:8px;align-items:center}
+.edit input{width:100%;min-width:0}.edit .emo{text-align:center;font-size:20px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.tile{background:var(--card);border:3px solid var(--line);border-radius:14px;padding:12px 8px;text-align:center;cursor:pointer;font:inherit;color:var(--ink);min-height:130px}
+.tile .s{font-size:42px;line-height:1.1;display:block}
+.tile .e{font-weight:700;display:block;margin-top:4px}
+.tile .h{display:block;color:var(--mut);font-size:15px}
+.tile.ph{background:var(--ph)}
+.tile.scan{border-color:var(--hl);box-shadow:0 0 0 5px var(--hl);transform:scale(1.03)}
+.sent{min-height:64px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:20px}
+.chip{background:var(--accb);border-radius:8px;padding:4px 10px}
+.sep{font-size:12px;font-weight:700;color:var(--mut);margin:14px 0 6px;text-transform:uppercase;letter-spacing:.05em}
+#printArea .tile{cursor:default;border:2px dashed var(--mut);border-radius:0;min-height:150px}
+@media print{header,nav,.noprint,.banner{display:none!important}body{background:#fff;color:#000}section{display:none!important}#print{display:block!important}.tile{color:#000;border-color:#000!important;background:#fff!important;break-inside:avoid}.tile .h{color:#333}.grid{grid-template-columns:repeat(4,1fr)}.card{border:0;padding:0}}
+@media (max-width:560px){.edit{grid-template-columns:44px 1fr 1fr}.edit button{grid-column:1/-1}}
+</style>
+</head>
+<body>
+<header>
+<h1>Speak &amp; Learn</h1>
+<p>Lesson in, classroom communication board out. Teacher approves; the student chooses what is said.</p>
+</header>
+<nav role="tablist">
+<button role="tab" data-t="teacher" aria-selected="true">1 · Teacher</button>
+<button role="tab" data-t="student" aria-selected="false">2 · Student</button>
+<button role="tab" data-t="print" aria-selected="false">3 · Print</button>
+</nav>
+<main>
+
+<section id="teacher" class="on">
+<div class="card">
+<label for="lesson"><b>Paste a lesson</b></label>
+<textarea id="lesson">Photosynthesis is the process by which green plants make their own food. The leaf takes in carbon dioxide from the air. The roots absorb water from the soil. Chlorophyll in the leaf captures energy from sunlight. Using this energy, the plant turns carbon dioxide and water into glucose, a sugar that feeds the plant. Oxygen is released into the air as a by-product.</textarea>
+<div class="row" style="margin-top:10px">
+<button class="btn" id="gen">Generate board</button>
+<button class="btn sec" id="gold">Load hand-built board</button>
+<span class="note" id="status"></span>
+</div>
+</div>
+
+<div class="card" id="review" hidden>
+<div class="banner">Suggested by AI. Review before use.</div>
+<div id="edits"></div>
+<div class="row" style="margin-top:8px">
+<button class="btn sec" id="add">+ Add tile</button>
+<button class="btn" id="approve">Approve &amp; open student board</button>
+<button class="btn sec" id="expEn">Export OBF (English)</button>
+<button class="btn sec" id="expHi">Export OBF (Hindi)</button>
+</div>
+<p class="note">Classroom phrases (question, repeat, break, answer, help) are always added to every board.</p>
+</div>
+</section>
+
+<section id="student">
+<div class="card">
+<div class="row noprint" style="justify-content:space-between">
+<div class="row">
+<label>Speak <select id="lang"><option value="en">English</option><option value="hi">Hindi</option><option value="both">Both</option></select></label>
+<button class="btn sec" id="scanBtn">Start scanning</button>
+<label class="note">Speed <input type="range" id="speed" min="600" max="2500" step="100" value="1300"></label>
+</div>
+<span class="note" id="voiceNote"></span>
+</div>
+<p class="note" id="scanHelp" hidden>Single-switch demo: press Space or Enter when the yellow highlight is on the tile you want.</p>
+</div>
+<div class="card">
+<div class="sent" id="sent" aria-live="polite"><span class="note">Tap tiles to build a sentence.</span></div>
+<div class="row" style="margin-top:8px"><button class="btn" id="speakSent">Speak sentence</button><button class="btn sec" id="back">Delete last</button><button class="btn sec" id="clr">Clear</button></div>
+</div>
+<div id="board"></div>
+</section>
+
+<section id="print">
+<div class="card noprint row"><button class="btn" id="doPrint">Print board</button><span class="note">If the print button is blocked in your browser, use the browser’s own Print command (Ctrl/Cmd+P) on this tab.</span></div>
+<div id="printArea"></div>
+</section>
+</main>
+
+<script>
+const PHRASES=[
+{en:"I have a question",hi:"मेरा एक सवाल है",s:"✋",ph:1},
+{en:"Can you repeat that?",hi:"क्या आप दोबारा बता सकते हैं?",s:"🔁",ph:1},
+{en:"I need a break",hi:"मुझे ब्रेक चाहिए",s:"⏸️",ph:1},
+{en:"I know the answer",hi:"मुझे जवाब पता है",s:"💡",ph:1},
+{en:"I need help",hi:"मुझे मदद चाहिए",s:"🆘",ph:1}];
+const GOLD=[
+{en:"sunlight",hi:"धूप",s:"☀️"},{en:"water",hi:"पानी",s:"💧"},{en:"carbon dioxide",hi:"कार्बन डाइऑक्साइड",s:"💨"},
+{en:"oxygen",hi:"ऑक्सीजन",s:"🫁"},{en:"leaf",hi:"पत्ती",s:"🍃"},{en:"plant",hi:"पौधा",s:"🌱"},
+{en:"glucose",hi:"ग्लूकोज़",s:"🍬"},{en:"roots",hi:"जड़ें",s:"🪴"}];
+const KEYSYM={sun:"☀️",water:"💧",gas:"💨",air:"💨",oxygen:"🫁",leaf:"🍃",plant:"🌱",sugar:"🍬",root:"🪴",food:"🍽️"};
+let tiles=[],sentence=[],scanTimer=null,scanIdx=-1,voices=[];
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const all=()=>[...tiles,...PHRASES];
+
+function show(t){document.querySelectorAll("section").forEach(s=>s.classList.toggle("on",s.id===t));
+document.querySelectorAll("nav button").forEach(b=>b.setAttribute("aria-selected",b.dataset.t===t));
+if(t!=="student")stopScan();if(t==="student")renderBoard();if(t==="print")renderPrint();}
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>show(b.dataset.t));
+
+function renderEdits(){
+$("review").hidden=false;
+$("edits").innerHTML=tiles.map((t,i)=>`<div class="edit"><input class="emo" data-i="${i}" data-k="s" value="${esc(t.s)}" aria-label="Symbol"><input data-i="${i}" data-k="en" value="${esc(t.en)}" aria-label="English"><input data-i="${i}" data-k="hi" value="${esc(t.hi)}" aria-label="Hindi"><button class="btn sec" data-del="${i}">Delete</button></div>`).join("");
+$("edits").querySelectorAll("input").forEach(el=>el.oninput=()=>{tiles[el.dataset.i][el.dataset.k]=el.value});
+$("edits").querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{tiles.splice(+b.dataset.del,1);renderEdits()});
+}
+$("add").onclick=()=>{tiles.push({en:"",hi:"",s:"🔹"});renderEdits()};
+$("gold").onclick=()=>{tiles=GOLD.map(x=>({...x}));$("status").textContent="Hand-built photosynthesis board loaded.";renderEdits()};
+$("approve").onclick=()=>{tiles=tiles.filter(t=>t.en.trim());show("student")};
+
+$("gen").onclick=async()=>{
+const lesson=$("lesson").value.trim();if(!lesson)return;
+$("gen").disabled=true;$("status").textContent="Generating…";
+try{
+const prompt=`You are helping a speech-language therapist prepare a classroom communication board for a student with cerebral palsy (Class 6-7, India). From the lesson below, extract 8 to 12 key concepts the student would need to say or point to. Use simple words: nouns and short action words only. No medical or personal claims. For each give "en" (simple English word), "hi" (natural Hindi in Devanagari), and "sym" (one English keyword for a picture symbol). Return ONLY a JSON array like [{"en":"water","hi":"पानी","sym":"water"}], no other text.\n\nLESSON:\n${lesson}`;
+const out=await askAI(prompt);
+const arr=Array.isArray(out)?out:(out&&out.tiles);
+const clean=(arr||[]).filter(x=>x&&typeof x.en==="string"&&typeof x.hi==="string").slice(0,12).map(x=>({en:x.en.trim(),hi:x.hi.trim(),s:symFor(x.sym||x.en)}));
+if(clean.length<3)throw new Error("bad output");
+tiles=clean;$("status").textContent=`${clean.length} tiles suggested.`;renderEdits();
+}catch(e){
+tiles=GOLD.map(x=>({...x}));$("status").textContent="AI step unavailable here, so the hand-built photosynthesis board was loaded instead.";renderEdits();
+}finally{$("gen").disabled=false}};
+async function askAI(prompt){
+let sample=null;try{sample=await claude.use("sample")}catch(e){}
+if(sample)return sample.json(prompt);
+const r=await fetch("/api/generate",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt})});
+if(!r.ok)throw new Error("backend");return r.json()}
+function obf(lang){const key=lang==="hi"?"hi":"en",L=all().filter(t=>t.en.trim()),cols=4,rows=Math.ceil(L.length/cols);
+const buttons=L.map((t,i)=>({id:"b"+i,label:t[key],vocalization:t[key]}));
+const order=[];for(let r=0;r<rows;r++){const row=buttons.slice(r*cols,r*cols+cols).map(b=>b.id);while(row.length<cols)row.push(null);order.push(row)}
+return JSON.stringify({format:"open-board-0.1",id:"speak-learn-"+key,locale:key,name:"Speak & Learn ("+key+")",buttons,grid:{rows,columns:cols,order},images:[],sounds:[]},null,1)}
+async function saveFile(name,text){const blob=new Blob([text],{type:"application/json"});
+try{const d=await claude.use("downloads");if(d){await d.save({filename:name,data:blob});return}}catch(e){}
+const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;a.click()}
+function symFor(k){k=String(k).toLowerCase();for(const w in KEYSYM)if(k.includes(w))return KEYSYM[w];return "🔹"}
+
+function pickVoice(l){const p=l==="hi"?"hi":"en";return voices.find(v=>v.lang.toLowerCase().startsWith(p+"-in"))||voices.find(v=>v.lang.toLowerCase().startsWith(p))}
+function loadVoices(){voices=speechSynthesis.getVoices();const hv=pickVoice("hi");$("voiceNote").textContent=hv?"":"No Hindi voice on this device: Hindi text shows, speech may use English."}
+if("speechSynthesis"in window){loadVoices();speechSynthesis.onvoiceschanged=loadVoices}
+function say(text,l){if(!("speechSynthesis"in window))return;const u=new SpeechSynthesisUtterance(text);u.lang=l==="hi"?"hi-IN":"en-IN";const v=pickVoice(l);if(v)u.voice=v;u.rate=.9;speechSynthesis.speak(u)}
+function speakItem(t){speechSynthesis.cancel();const m=$("lang").value;if(m!=="hi")say(t.en,"en");if(m!=="en")say(t.hi,"hi")}
+
+function tileHTML(t,i,extra=""){return `<button class="tile ${t.ph?"ph":""} ${extra}" data-i="${i}"><span class="s">${esc(t.s)}</span><span class="e">${esc(t.en)}</span><span class="h">${esc(t.hi)}</span></button>`}
+function renderBoard(){
+if(!tiles.length)tiles=GOLD.map(x=>({...x}));
+$("board").innerHTML=`<div class="sep">Lesson words</div><div class="grid">${tiles.map((t,i)=>tileHTML(t,i)).join("")}</div><div class="sep">Classroom phrases</div><div class="grid">${PHRASES.map((t,i)=>tileHTML(t,tiles.length+i)).join("")}</div>`;
+$("board").querySelectorAll(".tile").forEach(b=>b.onclick=()=>choose(+b.dataset.i));
+}
+function choose(i){const t=all()[i];if(!t)return;sentence.push(t);speakItem(t);renderSent()}
+function renderSent(){$("sent").innerHTML=sentence.length?sentence.map(t=>`<span class="chip">${esc(t.s)} ${esc($("lang").value==="hi"?t.hi:t.en)}</span>`).join(""):'<span class="note">Tap tiles to build a sentence.</span>'}
+$("lang").onchange=renderSent;
+$("speakSent").onclick=()=>{if(!sentence.length)return;speechSynthesis.cancel();const m=$("lang").value;if(m!=="hi")say(sentence.map(t=>t.en).join(", "),"en");if(m!=="en")say(sentence.map(t=>t.hi).join(", "),"hi")};
+$("back").onclick=()=>{sentence.pop();renderSent()};
+$("clr").onclick=()=>{sentence=[];renderSent()};
+
+function scanStep(){const els=$("board").querySelectorAll(".tile");els.forEach(e=>e.classList.remove("scan"));scanIdx=(scanIdx+1)%els.length;const e=els[scanIdx];e.classList.add("scan");e.scrollIntoView({block:"nearest"})}
+function startScan(){stopScan();$("scanBtn").textContent="Stop scanning";$("scanHelp").hidden=false;scanIdx=-1;scanStep();scanTimer=setInterval(scanStep,+$("speed").value)}
+function stopScan(){clearInterval(scanTimer);scanTimer=null;$("scanBtn").textContent="Start scanning";$("scanHelp").hidden=true;document.querySelectorAll(".tile.scan").forEach(e=>e.classList.remove("scan"))}
+$("scanBtn").onclick=()=>scanTimer?stopScan():startScan();
+$("speed").onchange=()=>{if(scanTimer)startScan()};
+document.addEventListener("keydown",e=>{if(scanTimer&&(e.code==="Space"||e.key==="Enter")){e.preventDefault();choose(scanIdx);clearInterval(scanTimer);scanTimer=setInterval(scanStep,+$("speed").value)}});
+
+function renderPrint(){if(!tiles.length)tiles=GOLD.map(x=>({...x}));$("printArea").innerHTML=`<div class="grid">${all().map((t,i)=>tileHTML(t,i)).join("")}</div>`}
+$("doPrint").onclick=()=>{try{window.print()}catch(e){}};
+$("expEn").onclick=()=>saveFile("speak-learn-en.json",obf("en"));
+$("expHi").onclick=()=>saveFile("speak-learn-hi.json",obf("hi"));
+$("gold").click();
+</script>
+</body>
+</html>
